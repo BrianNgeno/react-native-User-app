@@ -7,10 +7,10 @@ function ViewImageScreen(props) {
     return (
     <View style={styles.container}>
         <View style={styles.closeIcon}>
-            <MaterialCommunityIcons name="close" color="white" size={30}/>
+            <MaterialCommunityIcons name="close" color="black" size={30}/>
         </View>
         <View style={styles.deleteIcon}>
-            <MaterialCommunityIcons name="trash-can-outline" color="white" size={30}/>
+            <MaterialCommunityIcons name="trash-can-outline" color="black " size={30}/>
         </View>
         <Image resizeMode='contain' style={styles.image} source={require("../assets/highway.jpg")} />
     </View>
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
         left:30,
     },
     container:{
-        backgroundColor:colors.black,
+        backgroundColor:colors.background,
         flex:1,
     },
     deleteIcon:{

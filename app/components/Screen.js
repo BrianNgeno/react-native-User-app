@@ -12,6 +12,9 @@ function Screen({children}) {
 const styles = StyleSheet.create({
     screen:{
         paddingTop: Constants.StatusBarHeight,
+        padding:20,
+        marginTop:40,
+        flex:1,
     },
 })
 export default Screen;

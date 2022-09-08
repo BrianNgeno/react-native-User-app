@@ -8,4 +8,7 @@ export default{
     light:"#DCDCDC",
     medium:'#778899',
     dark:"0c0c0c",
+    background:"#f8f4f4",
+    green:"green",
+    danger: "#ff5252",
 };
