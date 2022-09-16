@@ -3,10 +3,12 @@ import { Image, View, StyleSheet } from "react-native";
 import AppText from "../components/AppText/AppText";
 import colors from "../config/colors";
 import ListItem from "../components/ListItem";
+import Screen from "../components/Screen";
+
 
 function ListingDetailsScreen(props) {
   return (
-    <View>
+    <Screen>
       <Image
         style={styles.image}
         source={require("../assets/petrol.jpeg")}
@@ -21,7 +23,7 @@ function ListingDetailsScreen(props) {
             subTitle="5 Listings"
         />
       </View>
-    </View>
+    </Screen>
   );
 }
 

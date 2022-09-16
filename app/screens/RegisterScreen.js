@@ -1,35 +1,29 @@
-import React,{useState} from "react";
+import React from "react";
 import { StyleSheet, Image } from "react-native";
 import Screen from "../components/Screen";
 import * as Yup from "yup";
-import { AppFormField, SubmitButton, AppForm, ErrorMessage } from "../components/forms";
-import AppButton from "../components/AppButton";
-import colors from "../config/colors";
-import authApi from '../api/auth'; 
-import jwtDecode from 'jwt-decode';
+import { AppFormField, SubmitButton, AppForm } from "../components/forms";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
-  password: Yup.string().required().min(7).label("password"),
+  username: Yup.string().required().label("Username"),
+  password: Yup.string().required().min(8).label("password"),
+  repeatPassword: Yup.string().required().min(8).label("Repeat password"),
 });
-function LoginScreen({navigation}) {
-  const [loginFailed, setLoginFailed] = useState(false);
-  const handleSubmit = async ({email, password}) =>{
-    const result = await authApi.login(email,password);
-    if (!result.ok);
-    setLoginFailed(false);
-    const user = jwtDecode(result.data);
-    console.log(user);
-  }
+function LoginScreen(props) {
   return (
     <Screen>
       <Image style={styles.logo} source={require("../assets/logo.webp")} />
       <AppForm
-        initialValues={{ email: "", password: "" }}
-        onSubmit={handleSubmit}
+        initialValues={{
+          email: "",
+          username: "",
+          password: "",
+          repeatPassword: "",
+        }}
+        onSubmit={(values) => console.log(values)}
         validationSchema={validationSchema}
       >
-        <ErrorMessage error="Invalid username or password" visible={loginFailed} />
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}
@@ -43,6 +37,16 @@ function LoginScreen({navigation}) {
         <AppFormField
           autoCapitalize="none"
           autoCorrect={false}
+          name="username"
+          keyboardType="email-address"
+          icon="login"
+          placeholder="User Name"
+          textContentType="UserName"
+        />
+
+        <AppFormField
+          autoCapitalize="none"
+          autoCorrect={false}
           name="password"
           icon="lock"
           placeholder="Password"
@@ -50,11 +54,17 @@ function LoginScreen({navigation}) {
           textContentType="password"
         />
 
-        <SubmitButton title="login" />
+        <AppFormField
+          autoCapitalize="none"
+          autoCorrect={false}
+          name="repeat_password"
+          icon="lock"
+          placeholder="Repeat Password"
+          secureTextEntry
+          textContentType="password"
+        />
 
-        <AppButton title="Forgot your Password" color="white" onPress={() => navigation.navigate("Forgot Password")}/>
-          
-        
+        <SubmitButton title="Register" />
       </AppForm>
     </Screen>
   );
