@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     textInput:{
         color:colors.dark,
         fontSize:18,
+        width:"100%",
     },
 })
 export default AppTextInput;

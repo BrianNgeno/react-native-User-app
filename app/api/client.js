@@ -2,14 +2,13 @@ import { create } from "apisauce";
 import cache from "../utility/cache";
 
 const apiClient = create({
-  baseURL: "http://127.0.0.1:8000/api/login",
+  baseURL: "https://339c-41-90-70-114.in.ngrok.io/api",
 });
 
 const get = apiClient.get;
-apiClient.get = async (url, params, axiosConfig) => {
+apiClient.get = async (url,params, axiosConfig) => {
 
-  
-  const response = await get(url, params, axiosConfig);
+  const response = await post(url, params,axiosConfig);
   if (response.ok) {
     cache.store(url, response.data);
     return response;

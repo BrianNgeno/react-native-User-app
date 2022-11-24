@@ -1,32 +1,61 @@
-import React from "react";
+import React, {useState} from "react";
 import { StyleSheet, Image } from "react-native";
 import Screen from "../components/Screen";
 import * as Yup from "yup";
 import {AppFormField,SubmitButton,AppForm} from '../components/forms';
+import authApi from "../api/client";
 
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string().required().email().label("Email"),
+  phone_number: Yup.number().required().label("phone_number"),
 });
-function LoginScreen(props) {
+
+function PasswordResetScreen(props) {
+
+  const [error, setError] = useState();
+  const handleSubmit = async ({
+    phone_number,
+  }) => {
+    console.log(phone_number)
+    try {
+      if (phone_number) phone_number = "+254" + phone_number.slice(-9);
+      const result = await authApi.post("auth/password-request-otp", {
+        phone_number,
+      });
+      console.log(result.data);
+      
+      if (!result.ok) {
+        if (result.data) setError(result.data.error);
+        else {
+          setError("An unexpected error occured");
+          console.log(result);
+        }
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Screen>
       <Image style={styles.logo} source={require("../assets/logo.webp")} />
       <AppForm
         initialValues={{ email: "" }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}>
         <AppFormField
-          autoCapitalize="none"
           autoCorrect={false}
-          name="email"
-          keyboardType="email-address"
-          icon="email"
-          placeholder="Input your Email"
-          textContentType="emailAddress"
+          name="phone_number"
+          keyboardType="numeric"
+          icon="flag"
+          placeholder="Phone Number"
+          textContentType="telephoneNumber"
         />
 
-        <SubmitButton title="Reset Password" />
+        <SubmitButton 
+        title="Send OTP"
+        />
+
       </AppForm>
     </Screen>
   );
@@ -41,4 +70,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
 });
-export default LoginScreen;
+export default PasswordResetScreen;

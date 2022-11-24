@@ -1,24 +1,38 @@
 import React, { useEffect, useState } from "react";
-
 import { NavigationContainer } from "@react-navigation/native";
-import { enableScreens } from "react-native-screens";
-import NavigationTheme from "./app/navigation/NavigationTheme";
+
 import AppNavigator from "./app/navigation/AppNavigator";
 import AuthNavigator from "./app/navigation/AuthNavigator";
-import PasswordResetScreen from "./app/screens/PasswordResetScreen";
-import OtpScreen from "./app/screens/OtpScreen";
-import Screen from "./app/components/Screen";
-import * as ImagePicker from "expo-image-picker";
-import { Button } from "react-native-paper";
-import LoginScreen from "./app/screens/LoginScreen";
-import RegisterScreen from "./app/screens/RegisterScreen";
-
-enableScreens();
-
+import AuthContext from "./app/auth/context";
+import authStorage from "./app/auth/storage";
+import jwtDecode from "jwt-decode";
+import OfflineNotice from "./app/components/OfflineNotice";
 
 
 export default function App() {
-  return <NavigationContainer>
-    <AuthNavigator/>
-  </NavigationContainer>
+  const [user, setUser] = useState();
+  const [isReady, setIsReady] = useState(false);
+
+  const restoreToken = async () => {
+    try {
+      const token = authStorage.getToken();
+      if (!token) return;
+      setUser(jwtDecode(token));
+      useEffect(() => {
+        restoreToken();
+      }, []);
+    } catch {
+      return null;
+    }
+  };
+  return (
+    <>
+    <OfflineNotice/>
+    <AuthContext.Provider value={{ user, setUser }}>
+      <NavigationContainer>
+        {user ? <AppNavigator /> : <AuthNavigator />}
+      </NavigationContainer>
+    </AuthContext.Provider>
+    </>
+  );
 }

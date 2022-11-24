@@ -1,51 +1,69 @@
-import React from "react";
-
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import * as Yup from "yup";
 
 import {
-  AppForm as Form,
-  AppFormField as FormField,
-  AppFormPicker as Picker,
+  AppForm,
+  AppFormField,
+  AppFormPicker,
   SubmitButton,
+  AppFormImagePicker,
 } from "../components/forms";
 import Screen from "../components/Screen";
+import useLocation from "../hooks/useLocation";
+import listingsApi from "../api/listings";
+import UploadScreen from "./UploadScreen";
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
-  price: Yup.number().required().min(1).max(10000).label("Price"),
+  distance: Yup.number().required().min(1).max(10000).label("Distance"),
   description: Yup.string().label("Description"),
-  category: Yup.object().required().nullable().label("Category"),
+  images: Yup.array().min(1, "Please select at least one image."),
 });
 
-const categories = [
-  { label: "Furniture", value: 1 },
-  { label: "Clothing", value: 2 },
-  { label: "Camera", value: 3 },
-];
+function ListingEditScreen() {
+  const location = useLocation();
+  const [uploadVisible, setUploadVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const handleSubmit = async (listing, {resetForm}) => {
+    setProgress(0);
+    setUploadVisible(true);
+    const result = await listingsApi.addListing(
+      { ...listing, location },
+      (progress) => setProgress(progress)
+    );
+    
+    if (!result.ok) {
+      setUploadVisible(false);
+      alert("could not save the listing");
+    }
+    resetForm();
+  };
 
-function ListingEditingScreen(props) {
   return (
     <Screen style={styles.container}>
-      <Form
+      <UploadScreen onDone={()=> setUploadVisible(false)} progress={progress} visible={uploadVisible}/>
+      <AppForm
         initialValues={{
           title: "",
-          price: "",
+          distance: "",
           description: "",
-          category: null,
+          images: [],
         }}
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => console.log(location, values)}
         validationSchema={validationSchema}
       >
-        <FormField maxLength={255} name="title" placeholder="Title" />
-        <FormField
+        <AppFormImagePicker name="images" />
+        <AppFormField maxLength={255} name="title" placeholder="Title" />
+        <AppFormField
           keyboardType="numeric"
           maxLength={8}
-          name="price"
-          placeholder="Price"
+          name="distance"
+          placeholder="Distance Covered"
+          width={120}
         />
-        <Picker items={categories} name="category" placeholder="Category" />
-        <FormField
+
+        <AppFormField
           maxLength={255}
           multiline
           name="description"
@@ -53,7 +71,7 @@ function ListingEditingScreen(props) {
           placeholder="Description"
         />
         <SubmitButton title="Post" />
-      </Form>
+      </AppForm>
     </Screen>
   );
 }
@@ -63,4 +81,4 @@ const styles = StyleSheet.create({
     padding: 10,
   },
 });
-export default ListingEditingScreen;
+export default ListingEditScreen;

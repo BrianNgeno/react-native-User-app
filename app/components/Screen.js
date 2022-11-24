@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
         padding:20,
         marginTop:40,
         flex:1,
+        justifyContent:'flex-end',
     },
 })
 export default Screen;

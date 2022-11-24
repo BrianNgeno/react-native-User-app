@@ -1,47 +1,54 @@
 import React from "react";
-import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 
-import ListingDetailsScreen from "../screens/ListingDetailsScreen";
+import HomeScreen from "../screens/HomeScreen";
 import ListingEditingScreen from "../screens/ListingEditingScreen";
 import AccountNavigator from "./AccountNavigator";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import NewListingButton from "./NewListingButton";
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-const Tab = createMaterialBottomTabNavigator();
+
+const Tab = createBottomTabNavigator();
+
 
 const AppNavigator = () => (
+  
   <Tab.Navigator
     tabBarOptions={{
-      activeBackgroundColor: "yellow",
-      activeTintColor: "#f0edf6",
-      inactiveBackgroundColor: "#eee",
-      inactiveTintColor: "black",
+      activeBackgroundColor:colors.white,
+      inactiveBackgroundColor:'yellow',
+      activeTintColor:  colors.medium,
+      inactiveTintColor: colors.medium,
+      style: {
+        borderTopColor: "#fff",
+        backgroundColor: colors.light,
+        elevation: 0,
+      },
     }}
   >
+    
     <Tab.Screen
-      name="Listing"
-      component={ListingDetailsScreen}
+      name="Home"
+      component={HomeScreen}
       options={{
         tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons
             name="format-list-bulleted"
-            size={18}
+            size={20}
             color={color}
           />
         ),
       }}
     />
     <Tab.Screen
-      name="Image Edits"
+      name="Upload Image"
       component={ListingEditingScreen}
       options={{
         tabBarButton: () => <NewListingButton />,
-        tabBarIcon: ({ color, size }) => (
+        tabBarIcon: ({ color }) => (
           <MaterialCommunityIcons
-            name="plus-circle"
-            size={size}
-            color={color}
+            name="plus-circle"     
           />
         ),
       }}
@@ -51,11 +58,12 @@ const AppNavigator = () => (
       component={AccountNavigator}
       options={{
         tabBarIcon: ({ color }) => (
-          <MaterialCommunityIcons name="account" size={15} color={color} />
+          <MaterialCommunityIcons name="account" size={20} color={color} />
         ),
       }}
     />
   </Tab.Navigator>
+  
 );
 
 export default AppNavigator;

@@ -17,7 +17,7 @@ const AccountNavigator = () => (
       autoCapitalize: "words",
     }}
   >
-    <Stack.Screen name="Account" component={AccountScreen} />
+    <Stack.Screen name="Individual Account" component={AccountScreen} />
     <Stack.Screen name="Messages" component={MessagesScreen}/>
 
 
